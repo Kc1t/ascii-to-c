@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ASCII Art Formatter</title>
+    <link rel="stylesheet" href="./input.css" />
+    <link rel="stylesheet" href="./output.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+        overflow-x: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      class="min-h-screen w-screen flex flex-col items-center justify-center overflow-x-hidden p-6"
+    >
+      <div
+        class="flex flex-col gap-4 items-center justify-center min-h-full w-full lg:w-[60%] tv:max-w-2xl overflow-x-hidden overflow-y-auto"
+      >
+        <div
+          class="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]"
+        ></div>
+        <div
+          class="flex flex-col gap-2 mb-4 text-center items-center justify-center"
+        >
+          <h1 class="text-4xl text-gray-800 font-bold">ASCII - C Art Formatter</h1>
+          <!-- <p class="text-xl">Digite ou cole sua arte ASCII abaixo:</p> -->
+        </div>
+        <div class="flex flex-col w-full gap-2">
+          <textarea
+            id="asciiArtInput"
+            placeholder="Cole sua arte ASCII aqui..."
+            class="w-full h-40 p-2 border rounded-md"
+          ></textarea>
+          <div class="flex w-full items-center justify-center">
+            <button
+              onclick="formatAsciiArt()"
+              class="relative h-12 overflow-hidden rounded bg-[#1F2937] px-5 py-2.5 text-white transition-all duration-300 hover:bg-[#1F2937]/80 hover:ring-2 hover:ring-neutral-800 hover:ring-offset-2"
+            >
+              <span class="relative">Converter</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- <span class="mt-6 text-2xl">Arte ASCII Formatada:</span> -->
+
+        <code
+          class="text-sm sm:text-base inline-flex text-left items-start space-x-4 bg-gray-800 text-white rounded-lg p-4 pl-6 w-full"
+          style="white-space: pre-wrap"
+        >
+          <span class="flex gap-4 w-full">
+            <span class="shrink-0 text-gray-500"> $ </span>
+
+            <span class="flex-1" id="formattedArt"></span>
+          </span>
+
+          <!-- SVG Button -->
+          <svg
+            id="copyButton"
+            class="shrink-0 h-5 w-5 transition text-gray-500 cursor-pointer group-hover:text-white"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            aria-hidden="true"
+            onclick="copyFormattedArt()"
+          >
+            <path d="M8 2a1 1 0 000 2h2a1 1 0 100-2H8z"></path>
+            <path
+              d="M3 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v6h-4.586l1.293-1.293a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L10.414 13H15v3a2 2 0 01-2 2H5a2 2 0 01-2-2V5zM15 11h2a1 1 0 110 2h-2v-2z"
+            ></path>
+          </svg>
+        </code>
+        <div class="flex items-start justify-start w-full">
+          <p class="mt-4">Número de linhas: <span id="lineCount"></span></p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function formatAsciiArt() {
+        const asciiArt = document.getElementById("asciiArtInput").value;
+        const formattedArt = formatAsciiToCArray(asciiArt);
+        const numberOfLines = asciiArt.split("\n").length;
+
+        document.getElementById("formattedArt").textContent = formattedArt;
+        document.getElementById("lineCount").textContent = numberOfLines;
+      }
+
+      function formatAsciiToCArray(asciiArt) {
+        const lines = asciiArt.split("\n");
+        const formattedLines = lines.map((line) => `"${line}"`);
+        return `const char *texto[] = {\n${formattedLines.join(",\n")}\n};`;
+      }
+
+      function copyFormattedArt() {
+        const formattedArt =
+          document.getElementById("formattedArt").textContent;
+        navigator.clipboard.writeText(formattedArt).then(() => {
+          alert("Arte ASCII copiada para a área de transferência!");
+        });
+      }
+    </script>
+  </body>
+</html>
